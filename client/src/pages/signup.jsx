@@ -23,7 +23,7 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
+      //console.log(data);
 
       if (data.success === false) {
         setLoading(false);
@@ -39,14 +39,14 @@ export default function SignUp() {
     }
   };
 
-  console.log(formData);
+  //console.log(formData);
 
   return (
     <div className="body">
-      <div class="container">
+      <div className="container">
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit}>
-          <label for="name">Name</label>
+          <label>Name</label>
           <input
             type="text"
             id="name"
@@ -54,7 +54,7 @@ export default function SignUp() {
             onChange={handleChange}
           />
 
-          <label for="email">Email</label>
+          <label>Email</label>
           <input
             type="email"
             id="email"
@@ -62,7 +62,7 @@ export default function SignUp() {
             onChange={handleChange}
           />
 
-          <label for="password">Password</label>
+          <label>Password</label>
           <input
             type="password"
             id="password"
@@ -70,7 +70,7 @@ export default function SignUp() {
             onChange={handleChange}
           />
 
-          <label for="confirm-password">Confirm Password</label>
+          <label>Confirm Password</label>
           <input
             type="password"
             id="confirm-password"
@@ -78,7 +78,7 @@ export default function SignUp() {
             onChange={handleChange}
           />
 
-          <button class="signup-btn" disabled={loading}>
+          <button className="signup-btn" disabled={loading}>
             {loading ? "Loading..." : "Sign Up"}
           </button>
           <p>
@@ -87,9 +87,9 @@ export default function SignUp() {
               <span className="a ">Sign in</span>
             </Link>
           </p>
+          {error && <p className="red">{error}</p>}
         </form>
       </div>
-      {error && <p className="red">{error}</p>}
     </div>
   );
 }
