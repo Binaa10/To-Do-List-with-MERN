@@ -64,7 +64,7 @@ export default function SignIn() {
           </button>
           <p>
             Dont have an account?{" "}
-            <Link to={"/sign-up"}>
+            <Link to={"/signup"}>
               <span className="a">Signup</span>
             </Link>
           </p>
