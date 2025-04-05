@@ -1,6 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const TodoCard = ({ title, description, time, priority, category }) => {
+const TodoCard = ({
+  title,
+  description,
+  time,
+  priority,
+  category,
+  elem,
+  setToDos,
+}) => {
+  const navigate = useNavigate();
   // Determine priority color
   const getPriorityColor = () => {
     switch (priority.toLowerCase()) {
@@ -30,6 +40,13 @@ const TodoCard = ({ title, description, time, priority, category }) => {
       ) % colors.length;
     return colors[index];
   };
+
+  function handleDelete(id) {
+    setToDos((toDos) => toDos.filter((ele) => ele.id !== id));
+  }
+  function handleUpdate(elem) {
+    navigate(`/updatetask/${elem.id}`, { state: { task: elem } }); // Pass entire task object
+  }
 
   return (
     <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
@@ -65,7 +82,10 @@ const TodoCard = ({ title, description, time, priority, category }) => {
             {category}
           </span>
           <div className="flex space-x-2">
-            <button className="text-gray-500 hover:text-gray-700">
+            <button
+              className="text-gray-500 hover:text-gray-700"
+              onClick={() => handleUpdate(elem.id)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -75,7 +95,10 @@ const TodoCard = ({ title, description, time, priority, category }) => {
                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
               </svg>
             </button>
-            <button className="text-gray-500 hover:text-red-500">
+            <button
+              className="text-gray-500 hover:text-red-500"
+              onClick={() => handleDelete(elem)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"

@@ -1,70 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import { Link, useNavigate } from "react-router-dom";
-
-export default function AddTask({
-  taskTitle,
-  category,
-  dueDate,
-  priority,
-  taskDescription,
-  subtasks,
-  subtaskInput,
-  tags,
-  onTask,
-  onCatagory,
-  onDueDate,
-  onPriority,
-  onTaskDescription,
-  onSubTasks,
-  onTags,
-  onSubTaskInput,
-
-  setToDos,
-}) {
+const UpdateTask = ({ setToDos }) => {
   const navigate = useNavigate();
-  function handleSubmit(e) {
+  const location = useLocation();
+  const { task } = location.state || {}; // Access the task passed from the navigate state
+
+  // Initialize form fields with the passed task data
+  const [taskTitle, setTaskTitle] = useState(task?.taskTitle || "");
+  const [category, setCategory] = useState(task?.category || "Work");
+  const [dueDate, setDueDate] = useState(task?.dueDate || "");
+  const [priority, setPriority] = useState(task?.priority || "Low");
+  const [taskDescription, setTaskDescription] = useState(
+    task?.taskDescription || ""
+  );
+  const [subtasks, setSubTasks] = useState(task?.subtasks || []);
+  const [tags, setTags] = useState(task?.tags?.join(", ") || "");
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newTask = {
-      id: crypto.randomUUID(),
+    const updatedTask = {
+      ...task,
       taskTitle,
-      category: category || "Work",
+      category,
       dueDate,
-      priority: priority || "Low",
+      priority,
       taskDescription,
       subtasks,
-      tags: tags.split(",").map((tag) => tag.trim()), // Convert to array
+      tags: tags.split(",").map((tag) => tag.trim()), // Convert tags to array
     };
-    setToDos((previos) => [...previos, newTask]);
 
-    console.log(newTask);
-    onTask("");
-    onCatagory("");
-    onDueDate("");
-    onPriority("");
-    onTaskDescription("");
-    onSubTasks([]);
-    onTags("");
-    onSubTaskInput("");
-    navigate("/");
-  }
+    // Update the task in the toDos array
+    setToDos((prevToDos) =>
+      prevToDos.map((todo) => (todo.id === task.id ? updatedTask : todo))
+    );
 
-  function handleAddSubtask() {
-    if (subtaskInput.trim()) {
-      onSubTasks([...subtasks, subtaskInput.trim()]);
-      onSubTaskInput(""); // Clear input field after adding
-    }
-  }
+    // Redirect to home page after update
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-500 p-4">
       <div className="w-full max-w-xl bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center text-blue-500 mb-6">
-          Add New Task
+          Update Task
         </h2>
 
-        {/* Only one <form> wrapper */}
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
@@ -79,7 +60,7 @@ export default function AddTask({
                 type="text"
                 placeholder="Enter task title"
                 value={taskTitle}
-                onChange={(e) => onTask(e.target.value)}
+                onChange={(e) => setTaskTitle(e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               />
@@ -91,7 +72,7 @@ export default function AddTask({
               </label>
               <select
                 value={category}
-                onChange={(e) => onCatagory(e.target.value)}
+                onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               >
                 <option value="Work">Work</option>
@@ -108,7 +89,7 @@ export default function AddTask({
               <input
                 type="date"
                 value={dueDate}
-                onChange={(e) => onDueDate(e.target.value)}
+                onChange={(e) => setDueDate(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -119,7 +100,7 @@ export default function AddTask({
               </label>
               <select
                 value={priority}
-                onChange={(e) => onPriority(e.target.value)}
+                onChange={(e) => setPriority(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               >
                 <option value="Low">Low</option>
@@ -139,7 +120,7 @@ export default function AddTask({
                 placeholder="Enter task description"
                 rows="4"
                 value={taskDescription}
-                onChange={(e) => onTaskDescription(e.target.value)}
+                onChange={(e) => setTaskDescription(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               ></textarea>
             </div>
@@ -151,27 +132,12 @@ export default function AddTask({
               <div className="space-y-2">
                 <input
                   type="text"
-                  value={subtaskInput}
-                  onChange={(e) => onSubTaskInput(e.target.value)}
+                  value={subtasks.join(", ")} // Display subtasks as comma-separated
+                  onChange={(e) => setSubTasks(e.target.value.split(", "))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                  placeholder="Add a subtask"
+                  placeholder="Enter subtasks"
                 />
-                <button
-                  type="button"
-                  onClick={handleAddSubtask}
-                  className="text-sm text-blue-500 hover:text-blue-700 flex items-center"
-                >
-                  <span className="mr-1">+</span> Add another subtask
-                </button>
               </div>
-              {/* Displaying subtasks */}
-              <ul className="mt-2 space-y-1">
-                {subtasks.map((subtask, index) => (
-                  <li key={index} className="text-gray-600 text-sm">
-                    - {subtask}
-                  </li>
-                ))}
-              </ul>
             </div>
 
             <div className="form-group">
@@ -181,7 +147,7 @@ export default function AddTask({
               <input
                 type="text"
                 value={tags}
-                onChange={(e) => onTags(e.target.value)}
+                onChange={(e) => setTags(e.target.value)}
                 placeholder="Add tags (comma separated)"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               />
@@ -193,19 +159,22 @@ export default function AddTask({
             <button
               type="button"
               className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-gray-400"
+              onClick={() => navigate("/")} // Cancel button redirects to home
             >
-              <Link to={"/"}>Cancel</Link>
+              Cancel
             </button>
 
             <button
               type="submit"
               className="flex-1 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-400"
             >
-              Add Task
+              Update Task
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default UpdateTask;

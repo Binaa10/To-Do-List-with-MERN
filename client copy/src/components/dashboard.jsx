@@ -15,7 +15,7 @@ import Navbar from "../components/navbar.jsx";
 */
 }
 
-export default function Dashboard() {
+export default function Dashboard({ toDos, setToDos }) {
   return (
     <div className="flex h-screen flex-col bg-gray-100">
       <Navbar />
@@ -96,14 +96,20 @@ export default function Dashboard() {
             </Link>
           </div>
           <div className="flex flex-col gap-4 md:flex-row md:flex-wrap md:gap-4">
-            <TodoCard
-              title="Meeting with Team"
-              description="Discuss project updates and next steps."
-              time="10:00 AM"
-              priority="High"
-              category="Work"
-            />
-            <TodoCard
+            {toDos.map((elem) => (
+              <TodoCard
+                elem={elem}
+                key={elem.id}
+                setToDos={setToDos}
+                title={elem.taskTitle}
+                description={elem.taskDescription}
+                time={elem.dueDate}
+                priority={elem.priority}
+                category={elem.category}
+              />
+            ))}
+
+            {/*<TodoCard
               title="Meeting with Team"
               description="Discuss project updates and next steps."
               time="10:00 AM"
@@ -123,7 +129,7 @@ export default function Dashboard() {
               time="10:00 AM"
               priority="medium"
               category="Work"
-            />
+            />*/}
           </div>
         </div>
       </div>
