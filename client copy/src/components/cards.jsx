@@ -45,6 +45,7 @@ const TodoCard = ({
     setToDos((toDos) => toDos.filter((ele) => ele.id !== id));
   }
   function handleUpdate(elem) {
+    console.log(elem);
     navigate(`/updatetask/${elem.id}`, { state: { task: elem } }); // Pass entire task object
   }
 
@@ -84,7 +85,7 @@ const TodoCard = ({
           <div className="flex space-x-2">
             <button
               className="text-gray-500 hover:text-gray-700"
-              onClick={() => handleUpdate(elem.id)}
+              onClick={() => handleUpdate(elem)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +98,7 @@ const TodoCard = ({
             </button>
             <button
               className="text-gray-500 hover:text-red-500"
-              onClick={() => handleDelete(elem)}
+              onClick={() => handleDelete(elem.id)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

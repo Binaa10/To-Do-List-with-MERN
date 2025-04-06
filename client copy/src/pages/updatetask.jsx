@@ -4,9 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 const UpdateTask = ({ setToDos }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { task } = location.state || {}; // Access the task passed from the navigate state
+  const { task } = location.state || {};
 
-  // Initialize form fields with the passed task data
   const [taskTitle, setTaskTitle] = useState(task?.taskTitle || "");
   const [category, setCategory] = useState(task?.category || "Work");
   const [dueDate, setDueDate] = useState(task?.dueDate || "");
@@ -17,9 +16,11 @@ const UpdateTask = ({ setToDos }) => {
   const [subtasks, setSubTasks] = useState(task?.subtasks || []);
   const [tags, setTags] = useState(task?.tags?.join(", ") || "");
 
+  const [subtaskInput, setSubtaskInput] = useState("");
+  const [editIndex, setEditIndex] = useState(null);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const updatedTask = {
       ...task,
       taskTitle,
@@ -28,15 +29,34 @@ const UpdateTask = ({ setToDos }) => {
       priority,
       taskDescription,
       subtasks,
-      tags: tags.split(",").map((tag) => tag.trim()), // Convert tags to array
+      tags: tags.split(",").map((tag) => tag.trim()),
     };
-
-    // Update the task in the toDos array
     setToDos((prevToDos) =>
       prevToDos.map((todo) => (todo.id === task.id ? updatedTask : todo))
     );
+    navigate("/");
+  };
 
-    // Redirect to home page after update
+  const handleAddSubtask = () => {
+    if (subtaskInput.trim() === "") return;
+    if (editIndex !== null) {
+      const updated = [...subtasks];
+      updated[editIndex] = subtaskInput.trim();
+      setSubTasks(updated);
+      setEditIndex(null);
+    } else {
+      setSubTasks([...subtasks, subtaskInput.trim()]);
+    }
+    setSubtaskInput("");
+  };
+
+  const handleDeleteSubtask = (index) => {
+    setSubTasks(subtasks.filter((_, i) => i !== index));
+  };
+
+  const handleEditSubtask = (index) => {
+    setSubtaskInput(subtasks[index]);
+    setEditIndex(index);
   };
 
   return (
@@ -45,28 +65,27 @@ const UpdateTask = ({ setToDos }) => {
         <h2 className="text-3xl font-semibold text-center text-blue-500 mb-6">
           Update Task
         </h2>
-
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           {/* Left Column */}
           <div className="space-y-4">
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Task Title
               </label>
               <input
                 type="text"
-                placeholder="Enter task title"
                 value={taskTitle}
                 onChange={(e) => setTaskTitle(e.target.value)}
                 required
+                placeholder="Enter task title"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Category
               </label>
@@ -82,7 +101,7 @@ const UpdateTask = ({ setToDos }) => {
               </select>
             </div>
 
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Due Date
               </label>
@@ -94,7 +113,7 @@ const UpdateTask = ({ setToDos }) => {
               />
             </div>
 
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Priority
               </label>
@@ -112,35 +131,70 @@ const UpdateTask = ({ setToDos }) => {
 
           {/* Right Column */}
           <div className="space-y-4">
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Task Description
               </label>
               <textarea
-                placeholder="Enter task description"
-                rows="4"
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
+                rows="4"
+                placeholder="Enter task description"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               ></textarea>
             </div>
 
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Subtasks
               </label>
-              <div className="space-y-2">
+              <div className="flex space-x-2">
                 <input
                   type="text"
-                  value={subtasks.join(", ")} // Display subtasks as comma-separated
-                  onChange={(e) => setSubTasks(e.target.value.split(", "))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter subtasks"
+                  value={subtaskInput}
+                  onChange={(e) => setSubtaskInput(e.target.value)}
+                  placeholder="Enter subtask"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 />
+                <button
+                  type="button"
+                  onClick={handleAddSubtask}
+                  className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >
+                  {editIndex !== null ? "Update" : "Add"}
+                </button>
               </div>
+              <ul className="mt-3 space-y-2">
+                {subtasks.map((subtask, index) => (
+                  <li
+                    key={index}
+                    className="flex justify-between items-center bg-gray-100 px-3 py-2 rounded-md"
+                  >
+                    <span className="text-gray-700">{subtask}</span>
+                    <div className="space-x-2 text-sm">
+                      <button
+                        type="button"
+                        onClick={() => handleEditSubtask(index)}
+                        className="text-blue-500 hover:text-blue-700"
+                        title="Edit"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSubtask(index)}
+                        className="text-red-500 hover:text-red-700"
+                        title="Delete"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="form-group">
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Tags
               </label>
@@ -158,12 +212,11 @@ const UpdateTask = ({ setToDos }) => {
           <div className="col-span-2 flex justify-between mt-6 space-x-4">
             <button
               type="button"
+              onClick={() => navigate("/")}
               className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-gray-400"
-              onClick={() => navigate("/")} // Cancel button redirects to home
             >
               Cancel
             </button>
-
             <button
               type="submit"
               className="flex-1 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-400"

@@ -25,6 +25,7 @@ export default function AddTask({
   const navigate = useNavigate();
   function handleSubmit(e) {
     e.preventDefault();
+    console.log(subtasks, subtaskInput);
 
     const newTask = {
       id: crypto.randomUUID(),
@@ -33,7 +34,7 @@ export default function AddTask({
       dueDate,
       priority: priority || "Low",
       taskDescription,
-      subtasks,
+      subtasks: [...subtasks, subtaskInput],
       tags: tags.split(",").map((tag) => tag.trim()), // Convert to array
     };
     setToDos((previos) => [...previos, newTask]);
@@ -49,7 +50,9 @@ export default function AddTask({
     onSubTaskInput("");
     navigate("/");
   }
-
+  function handleSingleTaskChange(value) {
+    onSubTaskInput(value);
+  }
   function handleAddSubtask() {
     if (subtaskInput.trim()) {
       onSubTasks([...subtasks, subtaskInput.trim()]);
@@ -152,7 +155,7 @@ export default function AddTask({
                 <input
                   type="text"
                   value={subtaskInput}
-                  onChange={(e) => onSubTaskInput(e.target.value)}
+                  onChange={(e) => handleSingleTaskChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                   placeholder="Add a subtask"
                 />

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Add this import
-import TodoCard from "../components/cards.jsx";
-import Navbar from "../components/navbar.jsx";
+import TodoCard from "./Cards.jsx";
+import Navbar from "./Navbar.jsx";
 {
   /*
     const tasks = Array(4).fill({

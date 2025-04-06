@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home.jsx";
+import Home from "./pages/Home.jsx";
 
 import SignUp from "./pages/signup.jsx";
 import SignIn from "./pages/Signin.jsx";
-import AddTask from "./pages/addtask.jsx";
-import UpdateTask from "./pages/updatetask.jsx";
+import AddTask from "./pages/Addtask";
+import UpdateTask from "./pages/Updatetask.jsx";
 
 export default function App() {
   const [toDos, setToDos] = useState([]);

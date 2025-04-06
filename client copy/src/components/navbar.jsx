@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
 import { Link } from "react-router-dom";
 const SearchIcon = () => (
