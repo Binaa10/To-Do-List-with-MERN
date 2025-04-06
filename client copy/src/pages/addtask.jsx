@@ -19,6 +19,7 @@ export default function AddTask({
   onSubTasks,
   onTags,
   onSubTaskInput,
+  toDos,
 
   setToDos,
 }) {
@@ -38,6 +39,7 @@ export default function AddTask({
       tags: tags.split(",").map((tag) => tag.trim()), // Convert to array
     };
     setToDos((previos) => [...previos, newTask]);
+    localStorage.setItem("tasks", JSON.stringify([...toDos, newTask]));
 
     console.log(newTask);
     onTask("");

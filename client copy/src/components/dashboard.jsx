@@ -17,7 +17,7 @@ import Navbar from "./Navbar.jsx";
 
 export default function Dashboard({ toDos, setToDos }) {
   return (
-    <div className="flex h-screen flex-col bg-gray-100">
+    <div className="flex h-screen flex-col bg-blue-100">
       <Navbar />
 
       <div className="flex flex-1 p-4">
@@ -86,7 +86,7 @@ export default function Dashboard({ toDos, setToDos }) {
             {/* ///// */}
           </aside>
         </div>
-        <div className="flex-1 flex flex-col p-5 bg-pink-200 rounded-md shadow-md">
+        <div className="flex-1 flex flex-col p-5 bg-blue-100 rounded-md shadow-md">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Today Task</h2>
             <Link to={"/addtask"}>
@@ -106,6 +106,7 @@ export default function Dashboard({ toDos, setToDos }) {
                 time={elem.dueDate}
                 priority={elem.priority}
                 category={elem.category}
+                toDos={toDos}
               />
             ))}
 

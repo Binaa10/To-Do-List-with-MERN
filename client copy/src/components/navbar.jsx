@@ -34,7 +34,7 @@ const LogOutIcon = () => (
 
 export default function Navbar() {
   return (
-    <div className="flex h-screen flex-col bg-gray-100">
+    <div className="flex h-screen flex-col bg-blue-100">
       <div className="p-4">
         <div className="bg-blue-600 text-white shadow-md p-5 rounded-md flex justify-between items-center">
           <h1 className="text-xl text-slate-100 font-bold">🎰 To do List</h1>
@@ -49,7 +49,7 @@ export default function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <IoIosNotifications className="size-6 self-center" />
+            <IoIosNotifications className="size-6 self-center cursor-pointer" />
             <button className="bg-red-500 text-white px-4 py-2 flex items-center rounded-md hover:bg-red-600">
               <LogOutIcon />
               <Link to={"/signin"}>

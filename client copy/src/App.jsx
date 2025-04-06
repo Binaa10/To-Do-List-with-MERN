@@ -8,7 +8,9 @@ import AddTask from "./pages/Addtask";
 import UpdateTask from "./pages/Updatetask.jsx";
 
 export default function App() {
-  const [toDos, setToDos] = useState([]);
+  const [toDos, setToDos] = useState(
+    JSON.parse(localStorage.getItem("tasks") || [])
+  );
   const [taskTitle, setTaskTitle] = useState("");
   const [category, setCategory] = useState("Work");
   const [dueDate, setDueDate] = useState("");

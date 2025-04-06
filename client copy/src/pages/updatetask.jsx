@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const UpdateTask = ({ setToDos }) => {
+const UpdateTask = ({ setToDos, toDos }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { task } = location.state || {};
@@ -21,6 +21,7 @@ const UpdateTask = ({ setToDos }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const updatedTask = {
       ...task,
       taskTitle,
@@ -31,9 +32,21 @@ const UpdateTask = ({ setToDos }) => {
       subtasks,
       tags: tags.split(",").map((tag) => tag.trim()),
     };
+
+    // Update the state with the updated task
     setToDos((prevToDos) =>
       prevToDos.map((todo) => (todo.id === task.id ? updatedTask : todo))
     );
+
+    // Save the updated tasks to localStorage
+    localStorage.setItem(
+      "tasks", // key
+      JSON.stringify(
+        toDos.map((todo) => (todo.id === task.id ? updatedTask : todo))
+      ) // value
+    );
+
+    // Redirect the user after submitting
     navigate("/");
   };
 
